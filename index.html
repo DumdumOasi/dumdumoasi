@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dum Dum Wellness Oasi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+
+    <style>
+        /* === VARIABILI DI SISTEMA === */
+        :root {
+            --bg-body: #333333; 
+            --bg-container: #F5F2EB; 
+            --text-primary: #0B1B3D; 
+            --text-accent: #D4AF37; 
+            --text-secondary: #2C2C2C; 
+            
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Playfair Display', serif;
+        }
+
+        /* === RESET & BASE === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: var(--font-body);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden; /* Nasconde lo scroll della finestra principale */
+        }
+
+        /* === LAYOUT MOBILE-FIRST CON SCROLL SNAPPING === */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--bg-container);
+            height: 100vh; /* Altezza fissa allo schermo */
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            
+            /* Gestione dello scorrimento a "pagine" */
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* Nascondere la barra di scorrimento visibile per un look più pulito */
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .app-container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* === SINGOLA PAGINA (SEZIONE) === */
+        .page-section {
+            height: 100vh; /* Ogni sezione occupa il 100% dell'altezza */
+            width: 100%;
+            scroll-snap-align: center; /* Incastra la pagina al centro */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        /* === STILI DEGLI ELEMENTI === */
+        .hero-logo {
+            max-width: 250px;
+            height: auto;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            font-size: 26px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-body);
+            color: var(--text-accent);
+            font-size: 18px;
+            font-style: italic;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .treatment-icon {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .page-section h2 {
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .page-section h3 {
+            font-family: var(--font-heading);
+            color: var(--text-accent);
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .treatment-divider {
+            border: none;
+            border-top: 1px solid var(--text-accent);
+            width: 40px;
+            margin: 0 auto 20px;
+            opacity: 0.8;
+        }
+
+        .page-section p {
+            font-family: var(--font-body);
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 90%;
+        }
+
+        /* === FOOTER & CTA NELL'ULTIMA PAGINA === */
+        .scarcity-text {
+            font-size: 13px !important;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--text-primary);
+            color: var(--bg-container);
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            width: 100%;
+            max-width: 280px;
+            min-height: 55px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(11, 27, 61, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cta-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 4px 10px rgba(11, 27, 61, 0.2);
+        }
+
+        /* === ANIMAZIONI E TRANSIZIONI (SCOMPARSA/COMPARSA) === */
+        .anim-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Quando la pagina riceve la classe .is-active, innesca gli elementi interni */
+        .is-active .anim-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Ritardi a cascata per un effetto di ingresso elegante */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.5s; }
+        .delay-4 { transition-delay: 0.7s; }
+        .delay-5 { transition-delay: 0.9s; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- PAGINA 1: HERO -->
+        <section class="page-section is-active" id="page-1">
+            <img src="Logo_dumdum_nobackground.png" alt="Dum Dum Wellness Oasi" class="hero-logo anim-item delay-1">
+            <h1 class="anim-item delay-2">DUM DUM WELLNESS OASI</h1>
+            <p class="hero-subtitle anim-item delay-3">Il lusso del vero distacco mentale.</p>
+        </section>
+
+        <!-- PAGINA 2: FLASH FOCUS -->
+        <section class="page-section" id="page-2">
+            <img src="Flash_focus_logo.png" alt="Icona Flash Focus" class="treatment-icon anim-item delay-1">
+            <h2 class="anim-item delay-2">FLASH FOCUS</h2>
+            <h3 class="anim-item delay-2">15 Minuti | €30.00</h3>
+            <hr class="treatment-divider anim-item delay-3">
+            <p class="anim-item delay-4">Un intervento rapido mirato per sciogliere tensioni principali: cervicale, testa o piedi. Eseguito a secco o con oli asciutti per non macchiare, perfetto come ricarica istantanea o pre-serata.</p>
+        </section>
+
+        <!-- PAGINA 3: DEEP BALANCE -->
+        <section class="page-section" id="page-3">
+            <img src="deep_balance_logo.png" alt="Icona Deep Balance" class="treatment-icon anim-item delay-1">
+            <h2 class="anim-item delay-2">DEEP BALANCE</h2>
+            <h3 class="anim-item delay-2">25 Minuti | €40.00</h3>
+            <hr class="treatment-divider anim-item delay-3">
+            <p class="anim-item delay-4">Massaggio decontratturante e defaticante profondo, ideale dopo lo sport o una settimana intensa. L'uso di oli essenziali rinfrescanti alla menta e aloe dona sollievo immediato e rigenerazione muscolare.</p>
+        </section>
+
+        <!-- PAGINA 4: PREMIUM RITUAL + CTA -->
+        <section class="page-section" id="page-4">
+            <img src="premium_ritual_logo.png" alt="Icona Premium Ritual" class="treatment-icon anim-item delay-1" style="max-width: 100px; margin-bottom: 10px;">
+            <h2 class="anim-item delay-2">PREMIUM RITUAL</h2>
+            <h3 class="anim-item delay-2">45 Minuti | €100.00</h3>
+            <hr class="treatment-divider anim-item delay-3" style="margin-bottom: 10px;">
+            <p class="anim-item delay-4" style="font-size: 14px;">L'esperienza olistica d'élite a 360°. Un protocollo esclusivo che unisce manovre profonde, stretching assistito e riequilibrio energetico totale per il massimo della cura e del distacco mentale.</p>
+            
+            <p class="scarcity-text anim-item delay-5">Servizio esclusivo su prenotazione.<br>Disponibile solo in date selezionate.</p>
+            <a href="https://wa.me/393518058762" class="cta-button anim-item delay-5">PRENOTA SU WHATSAPP</a>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Opzioni per l'Intersection Observer
+            const observerOptions = {
+                root: document.querySelector('.app-container'), // Usa il container come area di scorrimento
+                rootMargin: '0px',
+                threshold: 0.5 // Innesca l'animazione quando il 50% della pagina è visibile
+            };
+
+            // Osservatore che gestisce le classi is-active
+            const pageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Aggiunge la classe quando la pagina entra nello schermo
+                        entry.target.classList.add('is-active');
+                    } else {
+                        // Rimuove la classe quando la pagina esce, permettendo all'animazione di ripetersi tornando indietro
+                        entry.target.classList.remove('is-active');
+                    }
+                });
+            }, observerOptions);
+
+            // Selezione di tutte le pagine da osservare
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => pageObserver.observe(page));
+        });
+    </script>
+</body>
+</html>
