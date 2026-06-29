@@ -76,7 +76,7 @@
             height: 100dvh; /* Altezza dinamica per i browser mobile */
             width: 100%;
             scroll-snap-align: center;
-            scroll-snap-stop: always;
+            scroll-snap-stop: always; /* Impedisce di saltare le pagine */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -183,24 +183,24 @@
         /* === PULSANTE FLUTTUANTE === */
         .floating-cta {
             position: absolute;
-            bottom: 30px;
+            bottom: 70px; /* Alzato a 70px per scavalcare la barra nativa del browser */
             left: 50%;
             transform: translateX(-50%);
             background-color: var(--text-accent); 
             color: var(--text-primary); 
             font-family: var(--font-heading);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             text-decoration: none;
-            padding: 12px 25px;
+            padding: 14px 28px;
             border-radius: 30px;
             letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-            z-index: 10;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+            z-index: 9999; /* Z-index altissimo per sovrapporsi a tutto */
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .floating-cta.hidden {
@@ -354,7 +354,7 @@
             const observerOptions = {
                 root: scrollContainer,
                 rootMargin: '0px',
-                threshold: 0.4 /* Soglia abbassata per maggiore precisione su mobile */
+                threshold: 0.6 /* Alzato al 60%: logica antiproiettile per mobile */
             };
 
             const pageObserver = new IntersectionObserver((entries) => {
@@ -364,6 +364,8 @@
                         entry.target.classList.add('is-active');
                         
                         const currentId = entry.target.id;
+                        
+                        // Gestione Pallini
                         dots.forEach(dot => {
                             if(dot.getAttribute('data-target') === currentId) {
                                 dot.classList.add('is-active-dot');
@@ -372,6 +374,7 @@
                             }
                         });
 
+                        // Logica Pulsante Fluttuante
                         if (currentId === 'page-1' || currentId === 'page-5') {
                             floatingCta.classList.add('hidden');
                         } else {
