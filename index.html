@@ -73,6 +73,7 @@
             height: 100vh;
             width: 100%;
             scroll-snap-align: center;
+            scroll-snap-stop: always; /* <-- LA REGOLA CHE IMPEDISCE DI SALTARE LE PAGINE */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -274,10 +275,8 @@
 </head>
 <body>
 
-    <!-- Wrapper Esterno -->
     <div class="mobile-wrapper">
         
-        <!-- Paginazione (Ora 5 dots) -->
         <div class="pagination-dots">
             <div class="dot is-active-dot" data-target="page-1"></div>
             <div class="dot" data-target="page-2"></div>
@@ -286,15 +285,12 @@
             <div class="dot" data-target="page-5"></div>
         </div>
 
-        <!-- Pulsante Fluttuante (Nascosto in pagina 1 e 5) -->
         <a href="https://wa.me/393518058762?text=Salve,%20vorrei%20ricevere%20informazioni%20e%20prenotare%20un%20trattamento%20alla%20Dum%20Dum%20Wellness%20Oasi." class="floating-cta hidden" id="floatingCta">
             PRENOTA
         </a>
 
-        <!-- Area di scorrimento -->
         <div class="app-container" id="scrollContainer">
             
-            <!-- PAGINA 1: HERO -->
             <section class="page-section is-active" id="page-1">
                 <img src="Logo_dumdum_nobackground.png" alt="Dum Dum Wellness Oasi" class="hero-logo anim-item delay-1">
                 <h1 class="anim-item delay-2">DUM DUM WELLNESS OASI</h1>
@@ -308,7 +304,6 @@
                 </div>
             </section>
 
-            <!-- PAGINA 2: FLASH FOCUS -->
             <section class="page-section" id="page-2">
                 <img src="Flash_focus_logo.png" alt="Icona Flash Focus" class="treatment-icon anim-item delay-1">
                 <h2 class="anim-item delay-2">FLASH FOCUS</h2>
@@ -317,7 +312,6 @@
                 <p class="anim-item delay-4">Un intervento rapido mirato per sciogliere tensioni principali: cervicale, testa o piedi. Eseguito a secco o con oli asciutti per non macchiare, perfetto come ricarica istantanea o pre-serata.</p>
             </section>
 
-            <!-- PAGINA 3: DEEP BALANCE -->
             <section class="page-section" id="page-3">
                 <img src="deep_balance_logo.png" alt="Icona Deep Balance" class="treatment-icon anim-item delay-1">
                 <h2 class="anim-item delay-2">DEEP BALANCE</h2>
@@ -326,7 +320,6 @@
                 <p class="anim-item delay-4">Massaggio decontratturante e defaticante profondo, ideale dopo lo sport o una settimana intensa. L'uso di oli essenziali rinfrescanti alla menta e aloe dona sollievo immediato e rigenerazione muscolare.</p>
             </section>
 
-            <!-- PAGINA 4: PREMIUM RITUAL -->
             <section class="page-section" id="page-4">
                 <img src="premium_ritual_logo.png" alt="Icona Premium Ritual" class="treatment-icon anim-item delay-1">
                 <h2 class="anim-item delay-2">PREMIUM RITUAL</h2>
@@ -335,7 +328,6 @@
                 <p class="anim-item delay-4">L'esperienza olistica d'élite a 360°. Un protocollo esclusivo che unisce manovre profonde, stretching assistito e riequilibrio energetico totale per il massimo della cura e del distacco mentale.</p>
             </section>
 
-            <!-- PAGINA 5: PRENOTAZIONI E INFO -->
             <section class="page-section" id="page-5">
                 <h2 class="anim-item delay-1">INFO & PRENOTAZIONI</h2>
                 <hr class="treatment-divider anim-item delay-2" style="margin-bottom: 30px;">
@@ -377,7 +369,6 @@
                             }
                         });
 
-                        // Il bottone fluttuante scompare alla pagina 1 e alla pagina 5
                         if (currentId === 'page-1' || currentId === 'page-5') {
                             floatingCta.classList.add('hidden');
                         } else {
