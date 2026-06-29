@@ -37,25 +37,29 @@
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            overflow: hidden; /* Nasconde lo scroll della finestra principale */
+            overflow: hidden; 
         }
 
-        /* === LAYOUT MOBILE-FIRST CON SCROLL SNAPPING === */
-        .app-container {
+        /* === CONTENITORE PRINCIPALE (UI OVERLAYS) === */
+        .mobile-wrapper {
+            position: relative;
             width: 100%;
             max-width: 480px;
+            height: 100vh;
             background-color: var(--bg-container);
-            height: 100vh; /* Altezza fissa allo schermo */
-            position: relative;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            
-            /* Gestione dello scorrimento a "pagine" */
+            overflow: hidden; /* Mantiene la UI fluttuante confinata qui dentro */
+        }
+
+        /* === AREA DI SCORRIMENTO === */
+        .app-container {
+            width: 100%;
+            height: 100%;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
         }
 
-        /* Nascondere la barra di scorrimento visibile per un look più pulito */
         .app-container::-webkit-scrollbar {
             display: none;
         }
@@ -64,25 +68,23 @@
             scrollbar-width: none;
         }
 
-        /* === SINGOLA PAGINA (SEZIONE) === */
+        /* === SINGOLA PAGINA === */
         .page-section {
-            height: 100vh; /* Ogni sezione occupa il 100% dell'altezza */
+            height: 100vh;
             width: 100%;
-            scroll-snap-align: center; /* Incastra la pagina al centro */
+            scroll-snap-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 30px 20px;
             text-align: center;
+            position: relative; /* Per posizionare elementi interni come l'indicatore di scroll */
         }
 
-        /* === STILI DEGLI ELEMENTI === */
-        .hero-logo {
-            max-width: 250px;
-            height: auto;
-            margin-bottom: 25px;
-        }
+        /* === STILI TESTI E IMMAGINI === */
+        .hero-logo { max-width: 250px; height: auto; margin-bottom: 25px; }
+        .treatment-icon { max-width: 150px; height: auto; margin-bottom: 20px; }
 
         .hero h1 {
             font-family: var(--font-heading);
@@ -102,12 +104,6 @@
             font-style: italic;
             font-weight: 600;
             letter-spacing: 0.5px;
-        }
-
-        .treatment-icon {
-            max-width: 150px;
-            height: auto;
-            margin-bottom: 20px;
         }
 
         .page-section h2 {
@@ -142,18 +138,103 @@
             font-size: 16px;
             font-style: italic;
             line-height: 1.6;
-            max-width: 90%;
+            max-width: 85%;
         }
 
-        /* === FOOTER & CTA NELL'ULTIMA PAGINA === */
-        .scarcity-text {
-            font-size: 13px !important;
-            margin-top: 30px;
-            margin-bottom: 15px;
+        /* === IMPLEMENTAZIONE 1: INDICATORE DI SCORRIMENTO === */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: bounce 2s infinite;
             opacity: 0.8;
         }
+        
+        .scroll-indicator span {
+            font-family: var(--font-heading);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+        }
 
-        .cta-button {
+        .scroll-indicator svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-primary);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -10px); }
+            60% { transform: translate(-50%, -5px); }
+        }
+
+        /* === IMPLEMENTAZIONE 3: PULSANTE FLUTTUANTE === */
+        .floating-cta {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--text-accent); /* Oro Opaco */
+            color: var(--text-primary); /* Blu Notte */
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .floating-cta.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, 20px);
+        }
+
+        /* === IMPLEMENTAZIONE 4: DOTS DI PAGINAZIONE === */
+        .pagination-dots {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid var(--text-primary);
+            background-color: transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dot.is-active-dot {
+            background-color: var(--text-primary);
+            transform: scale(1.3);
+        }
+
+        /* === CTA FINALE (PAGINA 4) === */
+        .scarcity-text { font-size: 13px !important; margin-top: 30px; margin-bottom: 15px; opacity: 0.8; }
+        
+        .main-cta-button {
             display: inline-flex;
             justify-content: center;
             align-items: center;
@@ -172,26 +253,13 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .cta-button:active {
-            transform: translateY(2px);
-            box-shadow: 0 4px 10px rgba(11, 27, 61, 0.2);
-        }
-
         /* === ANIMAZIONI E TRANSIZIONI (SCOMPARSA/COMPARSA) === */
         .anim-item {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
-                        transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
-        /* Quando la pagina riceve la classe .is-active, innesca gli elementi interni */
-        .is-active .anim-item {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Ritardi a cascata per un effetto di ingresso elegante */
+        .is-active .anim-item { opacity: 1; transform: translateY(0); }
         .delay-1 { transition-delay: 0.1s; }
         .delay-2 { transition-delay: 0.3s; }
         .delay-3 { transition-delay: 0.5s; }
@@ -202,72 +270,134 @@
 </head>
 <body>
 
-    <div class="app-container">
+    <!-- Wrapper Esterno che contiene tutto -->
+    <div class="mobile-wrapper">
         
-        <!-- PAGINA 1: HERO -->
-        <section class="page-section is-active" id="page-1">
-            <img src="Logo_dumdum_nobackground.png" alt="Dum Dum Wellness Oasi" class="hero-logo anim-item delay-1">
-            <h1 class="anim-item delay-2">DUM DUM WELLNESS OASI</h1>
-            <p class="hero-subtitle anim-item delay-3">Il lusso del vero distacco mentale.</p>
-        </section>
+        <!-- Elementi Fluttuanti UI -->
+        <div class="pagination-dots">
+            <div class="dot is-active-dot" data-target="page-1"></div>
+            <div class="dot" data-target="page-2"></div>
+            <div class="dot" data-target="page-3"></div>
+            <div class="dot" data-target="page-4"></div>
+        </div>
 
-        <!-- PAGINA 2: FLASH FOCUS -->
-        <section class="page-section" id="page-2">
-            <img src="Flash_focus_logo.png" alt="Icona Flash Focus" class="treatment-icon anim-item delay-1">
-            <h2 class="anim-item delay-2">FLASH FOCUS</h2>
-            <h3 class="anim-item delay-2">15 Minuti | €30.00</h3>
-            <hr class="treatment-divider anim-item delay-3">
-            <p class="anim-item delay-4">Un intervento rapido mirato per sciogliere tensioni principali: cervicale, testa o piedi. Eseguito a secco o con oli asciutti per non macchiare, perfetto come ricarica istantanea o pre-serata.</p>
-        </section>
+        <!-- Implementazione 2: Link WhatsApp Pre-compilato -->
+        <a href="https://wa.me/393518058762?text=Salve,%20vorrei%20ricevere%20informazioni%20e%20prenotare%20un%20trattamento%20alla%20Dum%20Dum%20Wellness%20Oasi." class="floating-cta hidden" id="floatingCta">
+            PRENOTA
+        </a>
 
-        <!-- PAGINA 3: DEEP BALANCE -->
-        <section class="page-section" id="page-3">
-            <img src="deep_balance_logo.png" alt="Icona Deep Balance" class="treatment-icon anim-item delay-1">
-            <h2 class="anim-item delay-2">DEEP BALANCE</h2>
-            <h3 class="anim-item delay-2">25 Minuti | €40.00</h3>
-            <hr class="treatment-divider anim-item delay-3">
-            <p class="anim-item delay-4">Massaggio decontratturante e defaticante profondo, ideale dopo lo sport o una settimana intensa. L'uso di oli essenziali rinfrescanti alla menta e aloe dona sollievo immediato e rigenerazione muscolare.</p>
-        </section>
-
-        <!-- PAGINA 4: PREMIUM RITUAL + CTA -->
-        <section class="page-section" id="page-4">
-            <img src="premium_ritual_logo.png" alt="Icona Premium Ritual" class="treatment-icon anim-item delay-1" style="max-width: 100px; margin-bottom: 10px;">
-            <h2 class="anim-item delay-2">PREMIUM RITUAL</h2>
-            <h3 class="anim-item delay-2">45 Minuti | €100.00</h3>
-            <hr class="treatment-divider anim-item delay-3" style="margin-bottom: 10px;">
-            <p class="anim-item delay-4" style="font-size: 14px;">L'esperienza olistica d'élite a 360°. Un protocollo esclusivo che unisce manovre profonde, stretching assistito e riequilibrio energetico totale per il massimo della cura e del distacco mentale.</p>
+        <!-- Area di scorrimento reale -->
+        <div class="app-container" id="scrollContainer">
             
-            <p class="scarcity-text anim-item delay-5">Servizio esclusivo su prenotazione.<br>Disponibile solo in date selezionate.</p>
-            <a href="https://wa.me/393518058762" class="cta-button anim-item delay-5">PRENOTA SU WHATSAPP</a>
-        </section>
+            <!-- PAGINA 1: HERO -->
+            <section class="page-section is-active" id="page-1">
+                <img src="Logo_dumdum_nobackground.png" alt="Dum Dum Wellness Oasi" class="hero-logo anim-item delay-1">
+                <h1 class="anim-item delay-2">DUM DUM WELLNESS OASI</h1>
+                <p class="hero-subtitle anim-item delay-3">Il lusso del vero distacco mentale.</p>
+                
+                <div class="scroll-indicator anim-item delay-5">
+                    <span>Scorri</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                    </svg>
+                </div>
+            </section>
 
+            <!-- PAGINA 2: FLASH FOCUS -->
+            <section class="page-section" id="page-2">
+                <img src="Flash_focus_logo.png" alt="Icona Flash Focus" class="treatment-icon anim-item delay-1">
+                <h2 class="anim-item delay-2">FLASH FOCUS</h2>
+                <h3 class="anim-item delay-2">15 Minuti | €30.00</h3>
+                <hr class="treatment-divider anim-item delay-3">
+                <p class="anim-item delay-4">Un intervento rapido mirato per sciogliere tensioni principali: cervicale, testa o piedi. Eseguito a secco o con oli asciutti per non macchiare, perfetto come ricarica istantanea o pre-serata.</p>
+            </section>
+
+            <!-- PAGINA 3: DEEP BALANCE -->
+            <section class="page-section" id="page-3">
+                <img src="deep_balance_logo.png" alt="Icona Deep Balance" class="treatment-icon anim-item delay-1">
+                <h2 class="anim-item delay-2">DEEP BALANCE</h2>
+                <h3 class="anim-item delay-2">25 Minuti | €40.00</h3>
+                <hr class="treatment-divider anim-item delay-3">
+                <p class="anim-item delay-4">Massaggio decontratturante e defaticante profondo, ideale dopo lo sport o una settimana intensa. L'uso di oli essenziali rinfrescanti alla menta e aloe dona sollievo immediato e rigenerazione muscolare.</p>
+            </section>
+
+            <!-- PAGINA 4: PREMIUM RITUAL + CTA -->
+            <section class="page-section" id="page-4">
+                <img src="premium_ritual_logo.png" alt="Icona Premium Ritual" class="treatment-icon anim-item delay-1" style="max-width: 100px; margin-bottom: 10px;">
+                <h2 class="anim-item delay-2">PREMIUM RITUAL</h2>
+                <h3 class="anim-item delay-2">45 Minuti | €100.00</h3>
+                <hr class="treatment-divider anim-item delay-3" style="margin-bottom: 10px;">
+                <p class="anim-item delay-4" style="font-size: 14px;">L'esperienza olistica d'élite a 360°. Un protocollo esclusivo che unisce manovre profonde, stretching assistito e riequilibrio energetico totale per il massimo della cura e del distacco mentale.</p>
+                
+                <p class="scarcity-text anim-item delay-5">Servizio esclusivo su prenotazione.<br>Disponibile solo in date selezionate.</p>
+                
+                <!-- Implementazione 2: Link WhatsApp Pre-compilato -->
+                <a href="https://wa.me/393518058762?text=Salve,%20vorrei%20ricevere%20informazioni%20e%20prenotare%20un%20trattamento%20alla%20Dum%20Dum%20Wellness%20Oasi." class="main-cta-button anim-item delay-5">PRENOTA SU WHATSAPP</a>
+            </section>
+
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Opzioni per l'Intersection Observer
+            const scrollContainer = document.getElementById('scrollContainer');
+            const floatingCta = document.getElementById('floatingCta');
+            const dots = document.querySelectorAll('.dot');
+            
+            // Opzioni Observer
             const observerOptions = {
-                root: document.querySelector('.app-container'), // Usa il container come area di scorrimento
+                root: scrollContainer,
                 rootMargin: '0px',
-                threshold: 0.5 // Innesca l'animazione quando il 50% della pagina è visibile
+                threshold: 0.5 
             };
 
-            // Osservatore che gestisce le classi is-active
+            // Observer per sezioni e pallini
             const pageObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Aggiunge la classe quando la pagina entra nello schermo
+                        
+                        // 1. Innesca l'animazione degli elementi interni
                         entry.target.classList.add('is-active');
+                        
+                        // 2. Aggiorna il pallino (Dot) corrispondente
+                        const currentId = entry.target.id;
+                        dots.forEach(dot => {
+                            if(dot.getAttribute('data-target') === currentId) {
+                                dot.classList.add('is-active-dot');
+                            } else {
+                                dot.classList.remove('is-active-dot');
+                            }
+                        });
+
+                        // 3. Gestione del pulsante fluttuante
+                        // Nascondilo se siamo alla pagina 1 (Hero) o alla pagina 4 (dove c'è il bottone grande)
+                        if (currentId === 'page-1' || currentId === 'page-4') {
+                            floatingCta.classList.add('hidden');
+                        } else {
+                            floatingCta.classList.remove('hidden');
+                        }
+
                     } else {
-                        // Rimuove la classe quando la pagina esce, permettendo all'animazione di ripetersi tornando indietro
+                        // Resetta l'animazione quando la pagina non è più visibile
                         entry.target.classList.remove('is-active');
                     }
                 });
             }, observerOptions);
 
-            // Selezione di tutte le pagine da osservare
+            // Inizializza l'osservazione delle pagine
             const pages = document.querySelectorAll('.page-section');
             pages.forEach(page => pageObserver.observe(page));
+
+            // Permette ai pallini di funzionare come navigazione cliccabile
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    if(targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
         });
     </script>
 </body>
