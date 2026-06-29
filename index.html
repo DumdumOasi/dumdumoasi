@@ -35,6 +35,7 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            min-height: 100dvh; /* Altezza dinamica per i browser mobile */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow: hidden; 
@@ -45,7 +46,8 @@
             position: relative;
             width: 100%;
             max-width: 480px;
-            height: 100vh;
+            height: 100vh; /* Fallback per browser datati */
+            height: 100dvh; /* Altezza dinamica per i browser mobile */
             background-color: var(--bg-container);
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
             overflow: hidden;
@@ -70,10 +72,11 @@
 
         /* === SINGOLA PAGINA === */
         .page-section {
-            height: 100vh;
+            height: 100vh; /* Fallback per browser datati */
+            height: 100dvh; /* Altezza dinamica per i browser mobile */
             width: 100%;
             scroll-snap-align: center;
-            scroll-snap-stop: always; /* <-- LA REGOLA CHE IMPEDISCE DI SALTARE LE PAGINE */
+            scroll-snap-stop: always;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -351,7 +354,7 @@
             const observerOptions = {
                 root: scrollContainer,
                 rootMargin: '0px',
-                threshold: 0.5 
+                threshold: 0.4 /* Soglia abbassata per maggiore precisione su mobile */
             };
 
             const pageObserver = new IntersectionObserver((entries) => {
