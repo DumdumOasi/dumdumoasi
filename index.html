@@ -81,13 +81,13 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px 20px 120px 20px; /* <--- MODIFICA QUI: 120px di spazio vuoto in basso */
+            padding: 20px 20px 120px 20px; 
             text-align: center;
             position: relative; 
         }
 
         /* === STILI TESTI E IMMAGINI === */
-       .hero-logo { max-width: 220px; height: auto; margin-bottom: 20px; }
+        .hero-logo { max-width: 220px; height: auto; margin-bottom: 20px; }
         .treatment-icon { max-width: 130px; height: auto; margin-bottom: 10px; }
 
         .hero h1 {
@@ -296,9 +296,161 @@
             font-style: normal !important;
         }
 
+        /* === BODY SCANNER OVERLAY === */
+        .scanner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 27, 61, 0.98); 
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .scanner-overlay.hidden-scanner {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scanner-container {
+            width: 90%;
+            max-width: 400px;
+            background-color: var(--bg-container);
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--text-accent);
+        }
+
+        .close-scanner {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        .scanner-step {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .scanner-step.active-step {
+            display: block;
+        }
+
+        .scanner-title {
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .scanner-option {
+            background-color: transparent;
+            border: 1px solid var(--text-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-style: italic;
+        }
+
+        .scanner-option:active, .scanner-option.selected {
+            background-color: var(--text-primary);
+            color: var(--bg-container);
+            transform: scale(0.98);
+        }
+
+        .scanner-result-title {
+            font-family: var(--font-heading);
+            color: var(--text-accent);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .scanner-result-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
     </style>
 </head>
 <body>
+
+    <!-- BODY SCANNER OVERLAY -->
+    <div class="scanner-overlay" id="scannerOverlay">
+        <div class="scanner-container">
+            <button class="close-scanner" id="closeScanner">Salta</button>
+            
+            <!-- STEP 1: Domanda 1 -->
+            <div class="scanner-step active-step" id="step1">
+                <h3 class="scanner-title">Cosa ti chiede il tuo corpo oggi?</h3>
+                <button class="scanner-option" onclick="nextStep(1, 'flashFocus')">Sblocco immediato per tornare in spiaggia</button>
+                <button class="scanner-option" onclick="nextStep(1, 'deepBalance')">Sciogliere le tensioni muscolari profonde</button>
+                <button class="scanner-option" onclick="nextStep(1, 'soleMind')">Calmare la mente e alleggerire la stanchezza</button>
+                <button class="scanner-option" onclick="nextStep(1, 'premiumRitual')">Un distacco totale dal mondo</button>
+            </div>
+
+            <!-- STEP 2: Domanda 2 -->
+            <div class="scanner-step" id="step2">
+                <h3 class="scanner-title">Dove si concentra il carico strutturale?</h3>
+                <button class="scanner-option" onclick="calculateResult('cervicale')">Tratto cervicale, collo e spalle</button>
+                <button class="scanner-option" onclick="calculateResult('lombare')">Zona lombare, schiena e postura contratta</button>
+                <button class="scanner-option" onclick="calculateResult('gambe')">Gambe pesanti, piedi e mente sovraccarica</button>
+                <button class="scanner-option" onclick="calculateResult('total')">Mi sento bloccato/a ovunque, serve un reset</button>
+            </div>
+
+            <!-- STEP 3: Risultato e Upgrade -->
+            <div class="scanner-step" id="step3">
+                <p style="font-family: var(--font-heading); font-size: 12px; font-weight: 700; color: var(--text-primary);">IL TUO CORPO RICHIEDE:</p>
+                <h2 class="scanner-result-title" id="resultTreatmentName">Nome Trattamento</h2>
+                <p class="scanner-result-text" id="resultTreatmentDesc">Descrizione del trattamento suggerito dall'algoritmo.</p>
+                
+                <hr style="border:none; border-top: 1px solid var(--text-accent); width: 40px; margin: 0 auto 15px;">
+                
+                <h3 class="scanner-title" style="font-size: 14px;">Completa il tuo rituale</h3>
+                <p style="font-size: 12px; margin-bottom: 15px; font-style: italic;">Seleziona il privilegio in omaggio da abbinare:</p>
+                
+                <div id="upgradeOptionsContainer">
+                    <button class="scanner-option upgrade-btn" onclick="selectUpgrade('Pad oculare defaticante', this)">Pad oculare defaticante in gel</button>
+                    <button class="scanner-option upgrade-btn" onclick="selectUpgrade('Maschera viso lenitiva', this)">Maschera viso lenitiva doposole</button>
+                    <button class="scanner-option upgrade-btn" id="upgradeFeet" onclick="selectUpgrade('10 min extra sblocco plantare', this)">10 Min. extra di sblocco plantare</button>
+                </div>
+
+                <a href="#" id="scannerCta" class="main-cta-button" style="margin-top: 15px; opacity: 0.5; pointer-events: none;">PRENOTA IL RITUALE</a>
+            </div>
+        </div>
+    </div>
 
     <div class="mobile-wrapper">
         
@@ -342,15 +494,17 @@
                 </div>
             </section>
 
+            <!-- PAGINA 2: FLASH FOCUS -->
             <section class="page-section" id="page-2">
                 <img src="flash_focus_logo.png" alt="Icona Flash Focus" class="treatment-icon anim-item delay-1">
                 <h2 class="anim-item delay-2">FLASH FOCUS</h2>
                 <h3 class="anim-item delay-2">15 Minuti | €30.00</h3>
                 <hr class="treatment-divider anim-item delay-3">
                 <div class="zone-info anim-item delay-4">1 Zona mirata a scelta</div>
-                <p class="anim-item delay-4">Un intervento rapido e ad altissima precisione. Scegli una singola area critica del corpo (es. cervicale, schiena o gambe) per sciogliere istantaneamente le tensioni, sbloccare la muscolatura e ricaricarti senza interrompere la tua giornata di mare. Eseguito a secco o con oli asciutti per non macchiare, perfetto come ricarica istantanea o pre-serata. </p>
+                <p class="anim-item delay-4">Un intervento rapido e ad altissima precisione. Scegli una singola area critica del corpo (es. cervicale, schiena o gambe) per sciogliere istantaneamente le tensioni, sbloccare la muscolatura e ricaricarti senza interrompere la tua giornata di mare. Eseguito a secco o con oli asciutti per non macchiare, perfetto come ricarica istantanea o pre-serata.</p>
             </section>
 
+            <!-- PAGINA 3: DEEP BALANCE -->
             <section class="page-section" id="page-3">
                 <img src="deep_balance_logo.png" alt="Icona Deep Balance" class="treatment-icon anim-item delay-1">
                 <h2 class="anim-item delay-2">DEEP BALANCE</h2>
@@ -360,6 +514,7 @@
                 <p class="anim-item delay-4">Il bilanciamento perfetto. Puoi decidere se concentrare l'azione profonda e defaticante su due aree specifiche per massimizzare il recupero muscolare e linfatico, oppure abbandonarti a un massaggio relax fluido su tutto il corpo. La scelta è tua, l'efficacia è totale.</p>
             </section>
 
+            <!-- PAGINA 4: SOLE E MIND REFLEXOLOGY -->
             <section class="page-section" id="page-4">
                 <img src="Sole&Mind_Reflexology.png" alt="Icona Sole & Mind Reflexology" class="treatment-icon anim-item delay-1">
                 <h2 class="anim-item delay-2">SOLE & MIND REFLEXOLOGY</h2>
@@ -369,6 +524,7 @@
                 <p class="anim-item delay-4">L'essenza del benessere profondo partendo dalle radici. Un trattamento di riflessologia plantare avanzata che va oltre il semplice massaggio del piede. Allentando le tensioni della fascia plantare affaticata dalla sabbia, riattiva il microcircolo e induce uno stato di pura calma mentale.</p>
             </section>
 
+            <!-- PAGINA 5: PREMIUM RITUAL -->
             <section class="page-section" id="page-5">
                 <img src="premium_ritual_logo.png" alt="Icona Premium Ritual" class="treatment-icon anim-item delay-1">
                 <h2 class="anim-item delay-2">PREMIUM RITUAL</h2>
@@ -378,7 +534,7 @@
                 <p class="anim-item delay-4">L'esperienza d'élite a 360°. Un protocollo esclusivo senza fretta, su tutto il corpo, che unisce manovre profonde, stretching assistito e riequilibrio energetico totale per il massimo della cura e del distacco mentale.</p>
             </section>
 
-                        <!-- PAGINA 6: INFO, ESPERIENZE & PRENOTAZIONI -->
+            <!-- PAGINA 6: INFO, ESPERIENZE & PRENOTAZIONI -->
             <section class="page-section" id="page-6">
                 <h2 class="anim-item delay-1">INFO & PRENOTAZIONI</h2>
                 <hr class="treatment-divider anim-item delay-2" style="margin-bottom: 30px;">
@@ -397,7 +553,6 @@
                     <strong>Spa Etiquette:</strong> Per la tua sicurezza, segnala in prenotazione gravidanze, allergie o scottature. In caso di ritardo, la durata del trattamento sarà proporzionalmente ridotta.
                 </p>
             </section>
-
 
         </div>
     </div>
@@ -453,6 +608,113 @@
                     }
                 });
             });
+
+            // === LOGICA BODY SCANNER ===
+            let scores = {
+                flashFocus: 0,
+                deepBalance: 0,
+                soleMind: 0,
+                premiumRitual: 0
+            };
+
+            const treatmentsDB = {
+                flashFocus: { 
+                    name: "Flash Focus", 
+                    desc: "I tuoi recettori indicano la necessità di un intervento rapido. Sbloccheremo le tensioni in un'area mirata per darti leggerezza istantanea.",
+                    weight: 1 
+                },
+                deepBalance: { 
+                    name: "Deep Balance", 
+                    desc: "I tuoi tessuti richiedono un ripristino strutturale. Lavoreremo sulle fasce contratte per restituirti equilibrio e biomeccanica perfetta.",
+                    weight: 3
+                },
+                soleMind: { 
+                    name: "Sole & Mind Reflexology", 
+                    desc: "Il tuo corpo necessita di radicamento. Partiremo dalla fascia plantare per riattivare l'energia e indurre un distacco mentale profondo.",
+                    weight: 2
+                },
+                premiumRitual: { 
+                    name: "Premium Ritual", 
+                    desc: "Il tuo sistema nervoso richiede un reset totale. Ti aspetta un'immersione completa per riallineare corpo e mente a 360°.",
+                    weight: 4
+                }
+            };
+
+            let winningTreatmentId = "";
+            let selectedUpgradeText = "";
+
+            // Chiudi scanner
+            document.getElementById('closeScanner').addEventListener('click', () => {
+                document.getElementById('scannerOverlay').classList.add('hidden-scanner');
+            });
+
+            // Passaggio dallo step 1 allo step 2
+            window.nextStep = function(step, choice) {
+                if(step === 1) {
+                    scores[choice] += 1;
+                    document.getElementById('step1').classList.remove('active-step');
+                    document.getElementById('step2').classList.add('active-step');
+                }
+            }
+
+            // Calcolo risultato (Step 2 -> Step 3)
+            window.calculateResult = function(choice2) {
+                // Assegnazione punti Domanda 2
+                if(choice2 === 'cervicale') { scores.flashFocus += 1; scores.deepBalance += 1; }
+                if(choice2 === 'lombare') { scores.deepBalance += 1; scores.premiumRitual += 1; }
+                if(choice2 === 'gambe') { scores.soleMind += 1; }
+                if(choice2 === 'total') { scores.premiumRitual += 2; }
+
+                // Trova il vincitore considerando il pareggio (vince chi ha il weight maggiore)
+                let maxPoints = -1;
+                
+                for (const [id, points] of Object.entries(scores)) {
+                    if (points > maxPoints) {
+                        maxPoints = points;
+                        winningTreatmentId = id;
+                    } else if (points === maxPoints) {
+                        if (treatmentsDB[id].weight > treatmentsDB[winningTreatmentId].weight) {
+                            winningTreatmentId = id;
+                        }
+                    }
+                }
+
+                // Popola UI Risultato
+                const winner = treatmentsDB[winningTreatmentId];
+                document.getElementById('resultTreatmentName').innerText = winner.name;
+                document.getElementById('resultTreatmentDesc').innerText = winner.desc;
+
+                // Logica condizionale: Nascondi upgrade piedi se il vincitore è Sole & Mind
+                if(winningTreatmentId === 'soleMind') {
+                    document.getElementById('upgradeFeet').style.display = 'none';
+                }
+
+                // Passa alla schermata 3
+                document.getElementById('step2').classList.remove('active-step');
+                document.getElementById('step3').classList.add('active-step');
+            }
+
+            // Selezione Upgrade e sblocco pulsante WhatsApp
+            window.selectUpgrade = function(upgradeName, btnElement) {
+                selectedUpgradeText = upgradeName;
+                
+                // Rimuovi classe selected da tutti i bottoni upgrade
+                let btns = document.querySelectorAll('.upgrade-btn');
+                btns.forEach(b => b.classList.remove('selected'));
+                
+                // Aggiungi classe selected al cliccato
+                btnElement.classList.add('selected');
+
+                // Costruisci link WhatsApp Dinamico
+                const wText = `Salve! Ho completato il Body Scanner dell'Oasi. L'algoritmo mi ha suggerito un ${treatmentsDB[winningTreatmentId].name}. Come privilegio omaggio ho scelto: ${selectedUpgradeText}. Vorrei conoscere le disponibilità per oggi.`;
+                const wLink = `https://wa.me/393518058762?text=${encodeURIComponent(wText)}`;
+                
+                // Sblocca e aggiorna il pulsante CTA
+                const cta = document.getElementById('scannerCta');
+                cta.href = wLink;
+                cta.style.opacity = '1';
+                cta.style.pointerEvents = 'auto';
+            }
         });
     </script>
 </body>
