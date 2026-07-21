@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         /* === VARIABILI DI SISTEMA === */
@@ -105,7 +105,7 @@
             font-family: var(--font-body);
             color: var(--text-accent);
             font-size: 18px;
-            font-style: italic;
+            font-style: normal;
             font-weight: 600;
             letter-spacing: 0.5px;
             margin-bottom: 10px;
@@ -115,7 +115,7 @@
             font-family: var(--font-body);
             color: var(--text-secondary);
             font-size: 15px;
-            font-style: italic;
+            font-style: normal;
             opacity: 0.8;
         }
 
@@ -149,8 +149,8 @@
             font-family: var(--font-body);
             color: var(--text-secondary);
             font-size: 15px; 
-            font-style: italic;
-            line-height: 1.4; 
+            font-style: normal; /* RIMOSSO CORSIVO */
+            line-height: 1.5; /* AUMENTATA LEGGIBILITA' */
             max-width: 92%; 
         }
         
@@ -374,7 +374,7 @@
             width: 100%;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-style: italic;
+            font-style: normal; /* RIMOSSO CORSIVO */
         }
 
         .scanner-option:active, .scanner-option.selected {
@@ -392,10 +392,12 @@
         }
 
         .scanner-result-text {
+            font-family: var(--font-body);
             font-size: 14px;
             color: var(--text-secondary);
             margin-bottom: 20px;
-            line-height: 1.4;
+            line-height: 1.5; /* AUMENTATA LEGGIBILITA' */
+            font-style: normal; /* RIMOSSO CORSIVO */
         }
 
         @keyframes fadeIn {
@@ -412,26 +414,31 @@
         <div class="scanner-container">
             <button class="close-scanner" id="closeScanner">Salta</button>
             
-            <!-- STEP 1: Domanda 1 -->
+            <!-- STEP 1: Obiettivo -->
             <div class="scanner-step active-step" id="step1">
-                <h3 class="scanner-title">Cosa ti chiede il tuo corpo oggi?</h3>
-                <button class="scanner-option" onclick="nextStep(1, 'flashFocus')">Sblocco immediato per tornare in spiaggia</button>
-                <button class="scanner-option" onclick="nextStep(1, 'deepBalance')">Sciogliere le tensioni muscolari profonde</button>
-                <button class="scanner-option" onclick="nextStep(1, 'soleMind')">Calmare la mente e alleggerire la stanchezza</button>
-                <button class="scanner-option" onclick="nextStep(1, 'premiumRitual')">Un distacco totale dal mondo</button>
+                <h3 class="scanner-title">Qual è il tuo obiettivo oggi?</h3>
+                <button class="scanner-option" onclick="nextStep(1, 'fisico')">Recupero muscolare e leggerezza fisica</button>
+                <button class="scanner-option" onclick="nextStep(1, 'mentale')">Disconnessione mentale e relax profondo</button>
             </div>
 
-            <!-- STEP 2: Domanda 2 -->
+            <!-- STEP 2: Tensione -->
             <div class="scanner-step" id="step2">
-                <h3 class="scanner-title">Dove si concentra il carico strutturale?</h3>
-                <button class="scanner-option" onclick="calculateResult('cervicale')">Tratto cervicale, collo e spalle</button>
-                <button class="scanner-option" onclick="calculateResult('lombare')">Zona lombare, schiena e postura contratta</button>
-                <button class="scanner-option" onclick="calculateResult('gambe')">Gambe pesanti, piedi e mente sovraccarica</button>
-                <button class="scanner-option" onclick="calculateResult('total')">Mi sento bloccato/a ovunque, serve un reset</button>
+                <h3 class="scanner-title">Dove senti maggiore tensione?</h3>
+                <button class="scanner-option" onclick="nextStep(2, 'cervicale')">Collo, cervicale e spalle</button>
+                <button class="scanner-option" onclick="nextStep(2, 'lombare')">Schiena e zona lombare</button>
+                <button class="scanner-option" onclick="nextStep(2, 'gambe')">Gambe pesanti e piedi affaticati</button>
+                <button class="scanner-option" onclick="nextStep(2, 'total')">Blocco generale, su tutto il corpo</button>
             </div>
 
-            <!-- STEP 3: Risultato e Upgrade -->
+            <!-- STEP 3: Tempo (Filtro assoluto) -->
             <div class="scanner-step" id="step3">
+                <h3 class="scanner-title">Quanto tempo vuoi dedicarti?</h3>
+                <button class="scanner-option" onclick="calculateResult('rapido')">Un reset rapido (15-25 min)</button>
+                <button class="scanner-option" onclick="calculateResult('immersione')">Un'immersione profonda (30-50 min)</button>
+            </div>
+
+            <!-- STEP 4: Risultato e Upgrade -->
+            <div class="scanner-step" id="step4">
                 <p style="font-family: var(--font-heading); font-size: 12px; font-weight: 700; color: var(--text-primary);">IL TUO CORPO RICHIEDE:</p>
                 <h2 class="scanner-result-title" id="resultTreatmentName">Nome Trattamento</h2>
                 <p class="scanner-result-text" id="resultTreatmentDesc">Descrizione del trattamento suggerito dall'algoritmo.</p>
@@ -439,7 +446,7 @@
                 <hr style="border:none; border-top: 1px solid var(--text-accent); width: 40px; margin: 0 auto 15px;">
                 
                 <h3 class="scanner-title" style="font-size: 14px;">Completa il tuo rituale</h3>
-                <p style="font-size: 12px; margin-bottom: 15px; font-style: italic;">Seleziona il privilegio in omaggio da abbinare:</p>
+                <p style="font-size: 12px; margin-bottom: 15px; font-style: normal; font-family: var(--font-body);">Seleziona il privilegio in omaggio da abbinare:</p>
                 
                 <div id="upgradeOptionsContainer">
                     <button class="scanner-option upgrade-btn" onclick="selectUpgrade('Pad oculare defaticante', this)">Pad oculare defaticante in gel</button>
@@ -475,7 +482,7 @@
                 <h1 class="anim-item delay-2" style="font-size: 24px; margin-bottom: 10px;">DUM DUM WELLNESS OASI</h1>
                 <p class="hero-subtitle anim-item delay-3" style="font-size: 16px; margin-bottom: 20px;">La tua oasi privata, nel tuo posto preferito</p>
                 
-                <!-- NUOVO BLOCCO DATE -->
+                <!-- BLOCCO DATE -->
                 <div class="anim-item delay-4" style="margin: 10px 0 25px 0; padding: 15px 30px; border-top: 1px solid var(--text-accent); border-bottom: 1px solid var(--text-accent); background-color: rgba(212, 175, 55, 0.05);">
                     <h3 style="color: var(--text-primary); font-size: 13px; text-transform: uppercase; margin-bottom: 10px; font-weight: 700; letter-spacing: 1px;">Prossime disponibilità</h3>
                     <p style="color: var(--text-secondary); font-family: var(--font-heading); font-size: 15px; font-weight: 700; line-height: 1.6; font-style: normal; margin-bottom: 0;">
@@ -539,8 +546,8 @@
                 <h2 class="anim-item delay-1">INFO & PRENOTAZIONI</h2>
                 <hr class="treatment-divider anim-item delay-2" style="margin-bottom: 30px;">
                 
-                <!-- BLOCCO RITUALE DI COPPIA - INCURIOSENTE -->
-                <p class="anim-item delay-3" style="font-size: 15px; margin-bottom: 35px; font-style: italic; color: var(--text-primary); max-width: 90%; line-height: 1.5;">
+                <!-- BLOCCO RITUALE DI COPPIA -->
+                <p class="anim-item delay-3" style="font-size: 15px; margin-bottom: 35px; font-style: normal; color: var(--text-primary); max-width: 90%; line-height: 1.5;">
                     Siete in due? Lasciatevi illustrare la <strong style="color: var(--text-accent); font-weight: 700;">Sincronia dell'Oasi</strong>, il nostro percorso sequenziale riservato alle coppie.
                 </p>
                 
@@ -609,7 +616,7 @@
                 });
             });
 
-            // === LOGICA BODY SCANNER ===
+            // === LOGICA BODY SCANNER AVANZATA ===
             let scores = {
                 flashFocus: 0,
                 deepBalance: 0,
@@ -620,7 +627,7 @@
             const treatmentsDB = {
                 flashFocus: { 
                     name: "Flash Focus", 
-                    desc: "I tuoi recettori indicano la necessità di un intervento rapido. Sbloccheremo le tensioni in un'area mirata per darti leggerezza istantanea.",
+                    desc: "I tuoi recettori indicano la necessità di un intervento mirato. Sbloccheremo le tensioni specifiche per darti leggerezza immediata.",
                     weight: 1 
                 },
                 deepBalance: { 
@@ -648,24 +655,35 @@
                 document.getElementById('scannerOverlay').classList.add('hidden-scanner');
             });
 
-            // Passaggio dallo step 1 allo step 2
+            // Gestione passaggi Step 1 e Step 2
             window.nextStep = function(step, choice) {
                 if(step === 1) {
-                    scores[choice] += 1;
+                    // Assegnazione punti Obiettivo
+                    if(choice === 'fisico') { scores.flashFocus += 1; scores.deepBalance += 1; }
+                    if(choice === 'mentale') { scores.soleMind += 1; scores.premiumRitual += 1; }
+                    
                     document.getElementById('step1').classList.remove('active-step');
                     document.getElementById('step2').classList.add('active-step');
                 }
+                else if(step === 2) {
+                    // Assegnazione punti Area Fisica
+                    if(choice === 'cervicale') { scores.flashFocus += 2; scores.deepBalance += 1; }
+                    if(choice === 'lombare') { scores.deepBalance += 2; scores.premiumRitual += 1; }
+                    if(choice === 'gambe') { scores.soleMind += 2; scores.deepBalance += 1; }
+                    if(choice === 'total') { scores.premiumRitual += 2; scores.deepBalance += 1; }
+                    
+                    document.getElementById('step2').classList.remove('active-step');
+                    document.getElementById('step3').classList.add('active-step');
+                }
             }
 
-            // Calcolo risultato (Step 2 -> Step 3)
-            window.calculateResult = function(choice2) {
-                // Assegnazione punti Domanda 2
-                if(choice2 === 'cervicale') { scores.flashFocus += 1; scores.deepBalance += 1; }
-                if(choice2 === 'lombare') { scores.deepBalance += 1; scores.premiumRitual += 1; }
-                if(choice2 === 'gambe') { scores.soleMind += 1; }
-                if(choice2 === 'total') { scores.premiumRitual += 2; }
+            // Calcolo risultato (Step 3 -> Step 4)
+            window.calculateResult = function(choice3) {
+                // Il filtro Tempo (+10 punti garantisce la categoria corretta)
+                if(choice3 === 'rapido') { scores.flashFocus += 10; scores.deepBalance += 10; }
+                if(choice3 === 'immersione') { scores.soleMind += 10; scores.premiumRitual += 10; }
 
-                // Trova il vincitore considerando il pareggio (vince chi ha il weight maggiore)
+                // Trova il vincitore
                 let maxPoints = -1;
                 
                 for (const [id, points] of Object.entries(scores)) {
@@ -673,6 +691,7 @@
                         maxPoints = points;
                         winningTreatmentId = id;
                     } else if (points === maxPoints) {
+                        // In caso di parità, il weight decide (es. tra due trattamenti rapidi, vince quello più strutturato)
                         if (treatmentsDB[id].weight > treatmentsDB[winningTreatmentId].weight) {
                             winningTreatmentId = id;
                         }
@@ -684,32 +703,27 @@
                 document.getElementById('resultTreatmentName').innerText = winner.name;
                 document.getElementById('resultTreatmentDesc').innerText = winner.desc;
 
-                // Logica condizionale: Nascondi upgrade piedi se il vincitore è Sole & Mind
+                // Logica condizionale: Nascondi upgrade piedi se il vincitore è Sole & Mind Reflexology
                 if(winningTreatmentId === 'soleMind') {
                     document.getElementById('upgradeFeet').style.display = 'none';
                 }
 
-                // Passa alla schermata 3
-                document.getElementById('step2').classList.remove('active-step');
-                document.getElementById('step3').classList.add('active-step');
+                // Passa alla schermata finale
+                document.getElementById('step3').classList.remove('active-step');
+                document.getElementById('step4').classList.add('active-step');
             }
 
             // Selezione Upgrade e sblocco pulsante WhatsApp
             window.selectUpgrade = function(upgradeName, btnElement) {
                 selectedUpgradeText = upgradeName;
                 
-                // Rimuovi classe selected da tutti i bottoni upgrade
                 let btns = document.querySelectorAll('.upgrade-btn');
                 btns.forEach(b => b.classList.remove('selected'));
-                
-                // Aggiungi classe selected al cliccato
                 btnElement.classList.add('selected');
 
-                // Costruisci link WhatsApp Dinamico
                 const wText = `Salve! Ho completato il Body Scanner dell'Oasi. L'algoritmo mi ha suggerito un ${treatmentsDB[winningTreatmentId].name}. Come privilegio omaggio ho scelto: ${selectedUpgradeText}. Vorrei conoscere le disponibilità per oggi.`;
                 const wLink = `https://wa.me/393518058762?text=${encodeURIComponent(wText)}`;
                 
-                // Sblocca e aggiorna il pulsante CTA
                 const cta = document.getElementById('scannerCta');
                 cta.href = wLink;
                 cta.style.opacity = '1';
